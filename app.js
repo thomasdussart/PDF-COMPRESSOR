@@ -1,10 +1,11 @@
 "use strict";
 
 const express = require("express");
-const fileUpload = require('express-fileupload');
+const fs = require("fs");
+const fileUpload = require("express-fileupload");
 var bodyParser = require("body-parser");
+const gs = require("ghostscript4js");
 
-var exec = require('child_process').execSync
 const app = express();
 // We need cors middleware to bypass CORS security in browsers.
 const cors = require("cors");
@@ -15,7 +16,6 @@ app.use(fileUpload());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 let port = 3000;
-var count = 0;
 /**
  * The default path
  */
@@ -23,42 +23,48 @@ app.get("/", (req, res) => {
   res.sendFile(__dirname + "/public/index.html");
 });
 
-app.post('/', function(req, res) {
-  res.setHeader('Content-Type', 'application/json'); 
+app.post("/", function (req, res) {
+  res.setHeader("Content-Type", "application/json");
   if (!req.files || Object.keys(req.files).length === 0) {
-    return res.status(400).send('No files were uploaded.');
-  } 
-  console.log(Object.keys(req.files));
+    return res.status(400).send("No files were uploaded.");
+  }
+
   var infile = req.files.input_pdf;
   if (infile == undefined) {
     infile = req.files.uploadedFile;
   }
-  console.log(infile);
-  var infile_name = __dirname + '/' + infile.name
-  console.log(infile_name)
-  infile.mv(infile_name, function(err) {
-    if (err)
-      return res.status(500).send(err);
-    compress(infile_name, req.body.dpi);
-    count++;
-    res.status(200).send({"count": count})
-  });
-})
+  var infile_name = __dirname + "/" + infile.name;
 
-app.listen(port, err => {
-  console.log(`Listening on port: ${port}`);
+  infile.mv(infile_name, function (err) {
+    if (err) return res.status(500).send(err);
+    console.log(infile_name);
+    compressAndMove();
+    res.status(200).send();
+  });
 });
 
-async function compress(infile, dpi) {
-  var shell = __dirname + "/shrinkpdf.sh"
-  var des = __dirname + "/public/output.pdf"
-  var cmd = shell + " '" + infile + "'" + ' ' + des + ' ' + dpi
-  exec(cmd,
-      function (error, stdout, stderr) {
-          console.log('stdout: ' + stdout);
-          console.log('stderr: ' + stderr);
-          if (error !== null) {
-              console.log('exec error: ' + error);
-          }
-      });
+function compressAndMove() {
+  try {
+    // Take decision based on Ghostscript version
+    const version = gs.version();
+    console.log(version);
+    gs.executeSync(
+      "-sDEVICE=pdfwrite -o output.pdf -sDEVICE=pdfwrite -r100 input.pdf"
+    );
+    fs.rename(
+      __dirname + "/output.pdf",
+      __dirname + "/public/compressed/output.pdf",
+      function (err) {
+        if (err) throw err;
+        console.log("File Renamed");
+      }
+    );
+  } catch (err) {
+    // Handle error
+    throw err;
+  }
 }
+
+app.listen(port, (err) => {
+  console.log(`Listening on port: ${port}`);
+});

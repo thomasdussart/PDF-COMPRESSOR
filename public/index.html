@@ -2,47 +2,51 @@
 <html>
   <head>
     <!-- Loading bootstrap css file to format our html -->
-    <!-- <link
-      href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css"
+    <link
       rel="stylesheet"
-      id="bootstrap-css"
-    /> -->
-    <!-- Loading our own styles which is an animation for spinning wheels indicating waiting time -->
-    <link href="style.css" rel="stylesheet" id="bootstrap-css" />
-
-    <!-- Loading bootstrap css file to format our html -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.5.0.min.js" integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"></script>
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://code.jquery.com/jquery-3.5.0.min.js"
+      integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ="
+      crossorigin="anonymous"
+    ></script>
 
     <!-- Loading axios library necessary for making HTTP GET requests -->
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <title>PDF Compressor</title>
+    <title></title>
   </head>
   <body>
-    <div class="justify-content-center align-content-center">
-      <div style="padding: 20px;">
-        <h1 class="container" style="">PDF Compressor</h1>
-        <form class="container" method='POST' enctype="multipart/form-data" action='/'>
+    <div
+      class="d-flex flex-col justify-content-center align-content-center m-auto"
+    >
+      <div>
+        <h1 class="container">Compresseur</h1>
+        <form
+          class="container"
+          method="POST"
+          enctype="multipart/form-data"
+          action="/"
+        >
           <div>
-            <div><label for="input_pdf">Choose file to upload</label></div>
-            <input type="file" id="input_pdf" name="input_pdf" accept=".pdf">
-            <br></br>
-            <div><label for="dpi">Resolution in dpi</label></div>
-            <input type="number"  id="dpi" name="dpi">
+            <input type="file" id="input_pdf" name="input_pdf" accept=".pdf" />
           </div>
-          <div style="margin-top: 5px; margin-bottom: 5px;">
-            <button class="button" onclick="submitForm(); return false">Submit</button>
+          <div>
+            <button
+              id="submit_pdf"
+              class="btn btn-primary mt-2"
+              onclick="submitForm(); return false"
+            >
+              Submit
+            </button>
           </div>
-          <div>Submit Count: <span id="counter">0</span>
-          </div>
-          <div id="loader">
-          </div>
+          <div id="loader" class="text-center"></div>
         </form>
       </div>
     </div>
-  <canvas class="background"></canvas>
   </body>
   <!-- Use script.js to handle events on this page -->
   <script type="text/javascript" src="script.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/particlesjs/2.2.3/particles.min.js"></script>
 </html>

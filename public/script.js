@@ -1,27 +1,34 @@
 async function submitForm() {
-  document.getElementById("loader").innerHTML = "<span style='color: green;'>Compressing.....</span>";
   var formData = new FormData();
   var infile = document.getElementById("input_pdf").files[0];
-  var dpi = document.getElementById("dpi").value;
+  var fileNameFull = document.getElementById("input_pdf").value;
+  var fileName = fileNameFull.replace(/^.*[\\\/]/, "");
+  var dpi = 100;
+
+  if (infile == undefined) {
+    return alert("Veuillez sélectionner un PDF à compresser.");
+  }
+
+  document.getElementById("submit_pdf").disabled = true;
+  document.getElementById("input_pdf").disabled = true;
+
+  document.getElementById("loader").innerHTML =
+    "<span class='text-primary h1 mt-5'>Compressing.....</span>";
   formData.append("dpi", dpi);
-  formData.append("uploadedFile", infile);
-  axios.post('/',formData)
-    .then(res => { 
+  formData.append("uploadedFile", infile, "input.pdf");
+  axios
+    .post("/", formData)
+    .then((res) => {
       console.log(res);
       console.log(res.data);
-      document.getElementById("counter").innerHTML = res.data.count;
-      document.getElementById("loader").innerHTML = "<a target='_blank' href='http://localhost:3000/output.pdf'>compressed_pdf</a >";
+      document.getElementById("loader").innerHTML =
+        "<button class='btn btn-success mt-2'><a class='text-white' download='" +
+        fileName +
+        "' href='/compressed/output.pdf'>Télécharger le fichier</a ></button>";
     })
-    .catch(error => {
+    .catch((error) => {
       console.log(error.response);
-      document.getElementById("loader").innerHTML = "<span style='color: red;'>No file is uploaded.</span>";
+      document.getElementById("loader").innerHTML =
+        "<span style='color: red;'>No file is uploaded.</span>";
     });
 }
-
-window.onload = function() {
-  Particles.init({
-    selector: '.background',
-    maxParticles: 200,
-    color: '#ff0000'
-  });
-};
