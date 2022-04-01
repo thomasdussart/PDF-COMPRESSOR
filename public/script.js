@@ -3,7 +3,6 @@ async function submitForm() {
   var infile = document.getElementById("input_pdf").files[0];
   var fileNameFull = document.getElementById("input_pdf").value;
   var fileName = fileNameFull.replace(/^.*[\\\/]/, "");
-  var dpi = 100;
 
   if (infile == undefined) {
     return alert("Veuillez sélectionner un PDF à compresser.");
@@ -13,8 +12,7 @@ async function submitForm() {
   document.getElementById("input_pdf").disabled = true;
 
   document.getElementById("loader").innerHTML =
-    "<span class='text-primary h1 mt-5'>Compressing.....</span>";
-  formData.append("dpi", dpi);
+    "<span class='text-primary h1 mt-3'>Compressing.....</span>";
   formData.append("uploadedFile", infile, "input.pdf");
   axios
     .post("/", formData)
@@ -22,7 +20,7 @@ async function submitForm() {
       console.log(res);
       console.log(res.data);
       document.getElementById("loader").innerHTML =
-        "<button class='btn btn-success mt-2'><a class='text-white' download='" +
+        "<button class='btn btn-success mt-3'><a class='text-white' download='" +
         fileName +
         "' href='/compressed/output.pdf'>Télécharger le fichier</a ></button>";
     })

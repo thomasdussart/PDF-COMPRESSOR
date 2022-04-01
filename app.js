@@ -49,7 +49,7 @@ function compressAndMove() {
     const version = gs.version();
     console.log(version);
     gs.executeSync(
-      "-sDEVICE=pdfwrite -o output.pdf -sDEVICE=pdfwrite -r100 input.pdf"
+      "-sDEVICE=pdfwrite -o output.pdf -sDEVICE=pdfwrite -r70 input.pdf"
     );
     fs.rename(
       __dirname + "/output.pdf",
